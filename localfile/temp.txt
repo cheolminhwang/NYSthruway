@@ -1,0 +1,59 @@
+NEW YORK STATE THRUWAY AUTHORITY
+BARRIER TRAFFIC AND REVENUE BY CLASS
+Station #09- Gv. Mario M. Cuomo Bridge
+Saturday, August 01, 2020
+Class Traffic North Traffic South Total Traffic Total Revenue
+Non E-ZPass:
+2L  0  11,703  11,703 $58,515.00 
+3L  0  56  56  644.00 
+4L  0  63  63  866.25 
+2H  0  213  213  3,141.75 
+3H  0  23  23  477.25 
+4H  0  27  27  668.25 
+5H  0  317  317  10,381.75 
+6H  0  7  7  287.00 
+7H  0  3  3  147.75 
+Sub Total  0  12,412  12,412  75,129.00 
+E-ZPass AMS:
+Commuter  0  5,347  5,347  16,041.00 
+MOV  0  533  533  266.50 
+Green Discount  0  73  73  312.44 
+Motor Cycle 2L  0  19  19  47.50 
+2L  0  49,529  49,529  238,054.25 
+3L  0  169  169  1,466.25 
+4L  0  205  205  1,953.13 
+2H  0  594  594  5,363.93 
+3H  0  246  246  2,812.73 
+4H  0  71  71  1,163.49 
+5H  0  875  875  23,876.21 
+5S  0  117  117  1,916.46 
+6H  0  19  19  574.00 
+6S  0  19  19  311.22 
+7H  0  5  5  147.77 
+7S  0  19  19  311.22 
+Non-Revenue  0  113  113  0.00 
+Sub Total  0  57,953  57,953  294,618.10 
+E-ZPass CAPS:
+2L  0  40  40  190.00 
+4L  0  1  1  6.88 
+2H  0  31  31  228.78 
+3H  0  32  32  332.16 
+4H  0  57  57  705.66 
+5H  0  658  658  10,778.04 
+5S  0  126  126  2,063.88 
+6H  0  34  34  697.00 
+6S  0  3  3  49.14 
+7H  0  8  8  197.04 
+7S  0  2  2  32.76 
+Sub Total  0  992  992  15,281.34 
+TOTALS  0  71,357  71,357  385,028.44 
+Commuter   0  5,347  5,347  16,041.00 
+MOV  0  533  533  266.50 
+Passenger   0  61,858 61,858  302,055.70 
+Commercial   0  3,506  3,506  66,665.24 
+Non-Revenue   0  113  113  0.00 
+TOTAL  0  71,357  71,357  385,028.44 
+Payment Class  Adjusted  Adjusted  Adjusted  Adjusted  Adjust Adjust
+Type North  South  Traffic Amount Id Date
+
+09/08/2020   9:14:43AM  Page 1 of 1 N1
