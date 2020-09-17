@@ -9,10 +9,10 @@
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>824,801.6</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>864.8,801.6</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
-    <scg:List x:TypeArguments="x:String" Capacity="42">
+    <scg:List x:TypeArguments="x:String" Capacity="25">
       <x:String>System.Activities</x:String>
       <x:String>System.Activities.Statements</x:String>
       <x:String>System.Activities.Expressions</x:String>
@@ -36,10 +36,12 @@
       <x:String>System.Windows.Markup</x:String>
       <x:String>System.Globalization</x:String>
       <x:String>System.Activities.DynamicUpdate</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>CustomLibrary</x:String>
     </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
-    <scg:List x:TypeArguments="AssemblyReference" Capacity="21">
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="22">
       <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
@@ -61,6 +63,7 @@
       <AssemblyReference>UiPath.Excel</AssemblyReference>
       <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
       <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>CustomLibrary</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
   <Flowchart sap:VirtualizedContainerService.HintSize="633.6,636.8" sap2010:WorkflowViewState.IdRef="Flowchart_1">
@@ -73,6 +76,7 @@
       <Variable x:TypeArguments="x:String" Name="strFileYesterdayLoc" />
       <Variable x:TypeArguments="x:String" Name="strFileLastyearLoc" />
       <Variable x:TypeArguments="s:String[]" Default="[{&quot;06&quot;, &quot;08&quot;, &quot;09&quot;, &quot;14&quot;, &quot;86&quot;, &quot;89&quot;, &quot;98&quot;}]" Name="arrStation" />
+      <Variable x:TypeArguments="x:String" Name="strAllStations" />
     </Flowchart.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -152,19 +156,105 @@
           <av:PointCollection x:Key="ConnectorLocation">300,168.38 300,214.5</av:PointCollection>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <Sequence DisplayName="Get Report Files" sap:VirtualizedContainerService.HintSize="476.8,1964.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
+      <Sequence DisplayName="Get Report Files" sap:VirtualizedContainerService.HintSize="601.6,3260.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
         <Sequence.Variables>
           <Variable x:TypeArguments="x:String" Default="localfile\" Name="strDirLoc" />
           <Variable x:TypeArguments="x:String" Name="strTargetStation" />
           <Variable x:TypeArguments="x:String" Name="strTmp" />
           <Variable x:TypeArguments="x:Boolean" Default="True" Name="bFirst" />
+          <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Name="Config" />
+          <Variable x:TypeArguments="x:Double" Name="dblThreshholdCountNum" />
+          <Variable x:TypeArguments="x:Double" Name="dblThreshholdCountPct" />
+          <Variable x:TypeArguments="x:Double" Name="dblThreshholdRevNum" />
+          <Variable x:TypeArguments="x:Double" Name="dblThreshholdRevPct" />
+          <Variable x:TypeArguments="x:Int32" Default="0" Name="iCnt" />
+          <Variable x:TypeArguments="x:Int32" Name="intTotalStation" />
+          <Variable x:TypeArguments="x:Boolean" Default="False" Name="bLastStation" />
+          <Variable x:TypeArguments="x:String" Name="strWholeStations" />
         </Sequence.Variables>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
-        <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="435.2,231.2" sap2010:WorkflowViewState.IdRef="CommentOut_3">
+        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke Workflow File" sap:VirtualizedContainerService.HintSize="560,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_13" UnSafe="False" WorkflowFileName="Data\InitSettings.xaml">
+          <ui:InvokeWorkflowFile.Arguments>
+            <InArgument x:TypeArguments="x:String" x:Key="in_ConfigFile">Data\Config.xlsx</InArgument>
+            <InArgument x:TypeArguments="s:String[]" x:Key="in_ConfigSheets">[{"Settings","Constants"}]</InArgument>
+            <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="out_Config">[Config]</OutArgument>
+          </ui:InvokeWorkflowFile.Arguments>
+        </ui:InvokeWorkflowFile>
+        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="560,317.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_2">
+          <ui:MultipleAssign.AssignOperations>
+            <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_9">
+                <ui:AssignOperation.To>
+                  <OutArgument x:TypeArguments="x:Double">[dblThreshholdCountNum]</OutArgument>
+                </ui:AssignOperation.To>
+                <ui:AssignOperation.Value>
+                  <InArgument x:TypeArguments="x:Double">[CDbl(Config("ThreshholdCountNum").ToString)]</InArgument>
+                </ui:AssignOperation.Value>
+              </ui:AssignOperation>
+              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_10">
+                <ui:AssignOperation.To>
+                  <OutArgument x:TypeArguments="x:Double">[dblThreshholdCountPct]</OutArgument>
+                </ui:AssignOperation.To>
+                <ui:AssignOperation.Value>
+                  <InArgument x:TypeArguments="x:Double">[CDbl(Config("ThreshholdCountPct").ToString)]</InArgument>
+                </ui:AssignOperation.Value>
+              </ui:AssignOperation>
+              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_11">
+                <ui:AssignOperation.To>
+                  <OutArgument x:TypeArguments="x:Double">[dblThreshholdRevNum]</OutArgument>
+                </ui:AssignOperation.To>
+                <ui:AssignOperation.Value>
+                  <InArgument x:TypeArguments="x:Double">[CDbl(Config("ThreshholdRevNum").ToString)]</InArgument>
+                </ui:AssignOperation.Value>
+              </ui:AssignOperation>
+              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_12">
+                <ui:AssignOperation.To>
+                  <OutArgument x:TypeArguments="x:Double">[dblThreshholdRevPct]</OutArgument>
+                </ui:AssignOperation.To>
+                <ui:AssignOperation.Value>
+                  <InArgument x:TypeArguments="x:Double">[CDbl(Config("ThreshholdRevPct").ToString)]</InArgument>
+                </ui:AssignOperation.Value>
+              </ui:AssignOperation>
+              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_13">
+                <ui:AssignOperation.To>
+                  <OutArgument x:TypeArguments="x:String">[strAllStations]</OutArgument>
+                </ui:AssignOperation.To>
+                <ui:AssignOperation.Value>
+                  <InArgument x:TypeArguments="x:String">[Config("Station").ToString]</InArgument>
+                </ui:AssignOperation.Value>
+              </ui:AssignOperation>
+              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_14">
+                <ui:AssignOperation.To>
+                  <OutArgument x:TypeArguments="s:String[]">[arrStation]</OutArgument>
+                </ui:AssignOperation.To>
+                <ui:AssignOperation.Value>
+                  <InArgument x:TypeArguments="s:String[]">[Split(strAllStations ,",")]</InArgument>
+                </ui:AssignOperation.Value>
+              </ui:AssignOperation>
+              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_15">
+                <ui:AssignOperation.To>
+                  <OutArgument x:TypeArguments="x:Int32">[intTotalStation]</OutArgument>
+                </ui:AssignOperation.To>
+                <ui:AssignOperation.Value>
+                  <InArgument x:TypeArguments="x:Int32">[arrStation.Count]</InArgument>
+                </ui:AssignOperation.Value>
+              </ui:AssignOperation>
+              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_16">
+                <ui:AssignOperation.To>
+                  <OutArgument x:TypeArguments="x:String">[strWholeStations]</OutArgument>
+                </ui:AssignOperation.To>
+                <ui:AssignOperation.Value>
+                  <InArgument x:TypeArguments="x:String">[Config("AllStations").ToString]</InArgument>
+                </ui:AssignOperation.Value>
+              </ui:AssignOperation>
+            </scg:List>
+          </ui:MultipleAssign.AssignOperations>
+        </ui:MultipleAssign>
+        <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="560,52.8" sap2010:WorkflowViewState.IdRef="CommentOut_3">
           <ui:CommentOut.Body>
             <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="304,152.8" sap2010:WorkflowViewState.IdRef="Sequence_4">
               <sap:WorkflowViewStateService.ViewState>
@@ -182,8 +272,14 @@
               </Assign>
             </Sequence>
           </ui:CommentOut.Body>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
         </ui:CommentOut>
-        <Assign sap:VirtualizedContainerService.HintSize="435.2,60" sap2010:WorkflowViewState.IdRef="Assign_1">
+        <Assign sap:VirtualizedContainerService.HintSize="560,60" sap2010:WorkflowViewState.IdRef="Assign_1">
           <Assign.To>
             <OutArgument x:TypeArguments="s:DateTime">[dateMain]</OutArgument>
           </Assign.To>
@@ -191,7 +287,15 @@
             <InArgument x:TypeArguments="s:DateTime">[DateTime.Now.AddDays(-1)]</InArgument>
           </Assign.Value>
         </Assign>
-        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="435.2,192.8" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+        <Assign DisplayName="Assign for late night; no report yet" sap:VirtualizedContainerService.HintSize="560,60" sap2010:WorkflowViewState.IdRef="Assign_6">
+          <Assign.To>
+            <OutArgument x:TypeArguments="s:DateTime">[dateMain]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="s:DateTime">[DateTime.Now.AddDays(-2)]</InArgument>
+          </Assign.Value>
+        </Assign>
+        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="560,161.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
           <ui:MultipleAssign.AssignOperations>
             <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
               <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
@@ -200,14 +304,6 @@
                 </ui:AssignOperation.To>
                 <ui:AssignOperation.Value>
                   <InArgument x:TypeArguments="s:DateTime">[dateMain.AddDays(-1)]</InArgument>
-                </ui:AssignOperation.Value>
-              </ui:AssignOperation>
-              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_5">
-                <ui:AssignOperation.To>
-                  <OutArgument x:TypeArguments="x:String">[strTargetStation]</OutArgument>
-                </ui:AssignOperation.To>
-                <ui:AssignOperation.Value>
-                  <InArgument x:TypeArguments="x:String">[arrStation(1)]</InArgument>
                 </ui:AssignOperation.Value>
               </ui:AssignOperation>
               <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_6">
@@ -235,138 +331,211 @@
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
         </ui:MultipleAssign>
-        <c:GetLastYearDay sap:VirtualizedContainerService.HintSize="435.2,22.4" sap2010:WorkflowViewState.IdRef="GetLastYearDay_1" inThisYearDate="[dateMain]" outLastYearDate="[dateLastYear]" />
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Yesterday" sap:VirtualizedContainerService.HintSize="435.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="GetReport.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileYesterdayLoc]</OutArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateYesterday]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strStation">[strTargetStation]</InArgument>
-            <InArgument x:TypeArguments="x:Boolean" x:Key="in_bNeedLogin">[bFirst]</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
-        <Assign sap:VirtualizedContainerService.HintSize="338,60" sap2010:WorkflowViewState.IdRef="Assign_2">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:Boolean">[bFirst]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:Boolean">False</InArgument>
-          </Assign.Value>
-        </Assign>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Yesterday" sap:VirtualizedContainerService.HintSize="338,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="ExportData.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileYesterdayLoc]</InArgument>
-            <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - Yesterday" sap:VirtualizedContainerService.HintSize="338,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="Alert.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileYesterdayLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateYesterday]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_DateOther" />
-            <InArgument x:TypeArguments="x:String" x:Key="in_strOther">YESTERDAY</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Last Year" sap:VirtualizedContainerService.HintSize="338,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="GetReport.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileLastyearLoc]</OutArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateLastYear]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strStation">[strTargetStation]</InArgument>
-            <InArgument x:TypeArguments="x:Boolean" x:Key="in_bNeedLogin">[bFirst]</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Last Year" sap:VirtualizedContainerService.HintSize="338,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_11" UnSafe="False" WorkflowFileName="ExportData.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLastyearLoc]</InArgument>
-            <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - LastYear" sap:VirtualizedContainerService.HintSize="338,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_12" UnSafe="False" WorkflowFileName="Alert.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLastyearLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateLastYear]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_DateOther">[dateMain]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strOther">LASTYEAR</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Today" sap:VirtualizedContainerService.HintSize="338,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="GetReport.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileLoc]</OutArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateMain]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strStation">[strTargetStation]</InArgument>
-            <InArgument x:TypeArguments="x:Boolean" x:Key="in_bNeedLogin">[bFirst]</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Today" sap:VirtualizedContainerService.HintSize="338,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="ExportData.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLoc]</InArgument>
-            <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - Today" sap:VirtualizedContainerService.HintSize="338,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="Alert.xaml">
-          <ui:InvokeWorkflowFile.Arguments>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateMain]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
-            <InArgument x:TypeArguments="s:DateTime" x:Key="in_DateOther">[dateLastYear]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_strOther">TODAY</InArgument>
-          </ui:InvokeWorkflowFile.Arguments>
-          <sap:WorkflowViewStateService.ViewState>
-            <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            </scg:Dictionary>
-          </sap:WorkflowViewStateService.ViewState>
-        </ui:InvokeWorkflowFile>
+        <c:GetLastYearDay sap:VirtualizedContainerService.HintSize="560,22.4" sap2010:WorkflowViewState.IdRef="GetLastYearDay_1" inThisYearDate="[dateMain]" outLastYearDate="[dateLastYear]" />
+        <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each Station" sap:VirtualizedContainerService.HintSize="560,2125.6" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[arrStation]">
+          <ui:ForEach.Body>
+            <ActivityAction x:TypeArguments="x:String">
+              <ActivityAction.Argument>
+                <DelegateInArgument x:TypeArguments="x:String" Name="item" />
+              </ActivityAction.Argument>
+              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="524.8,1991.2" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Assign sap:VirtualizedContainerService.HintSize="483.2,60" sap2010:WorkflowViewState.IdRef="Assign_5">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[strTargetStation]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[item]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Yesterday" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="GetReport.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileYesterdayLoc]</OutArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateYesterday]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strStation">[strTargetStation]</InArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="in_bNeedLogin">[bFirst]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strAllStations">[strWholeStations]</InArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="in_bLast">[bLastStation]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+                <If Condition="[iCnt = 0]" DisplayName="If only first time; for login" sap:VirtualizedContainerService.HintSize="483.2,209.6" sap2010:WorkflowViewState.IdRef="If_1">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <If.Then>
+                    <Assign sap:VirtualizedContainerService.HintSize="262.4,60" sap2010:WorkflowViewState.IdRef="Assign_4">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:Boolean">[bFirst]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:Boolean">False</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                  </If.Then>
+                </If>
+                <c:Increase sap:VirtualizedContainerService.HintSize="483.2,22.4" sap2010:WorkflowViewState.IdRef="Increase_1" in_IntNum="[iCnt]" />
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Yesterday" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="ExportData.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileYesterdayLoc]</InArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - Yesterday" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="Alert.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileYesterdayLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateYesterday]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_DateOther">[new DateTime(2019,7,28)]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strOther">YESTERDAY</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THDiff">[dblThreshholdCountNum]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THDiffRev">[dblThreshholdRevNum]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THPct">[dblThreshholdCountPct]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_TH_PctRev">[dblThreshholdRevPct]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Last Year" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="GetReport.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileLastyearLoc]</OutArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateLastYear]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strStation">[strTargetStation]</InArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="in_bNeedLogin">[bFirst]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strAllStations">[strWholeStations]</InArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="in_bLast">[bLastStation]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+                <c:Increase sap:VirtualizedContainerService.HintSize="483.2,22.4" sap2010:WorkflowViewState.IdRef="Increase_2" in_IntNum="[iCnt]" />
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Last Year" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_11" UnSafe="False" WorkflowFileName="ExportData.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLastyearLoc]</InArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - LastYear" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_12" UnSafe="False" WorkflowFileName="Alert.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLastyearLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateLastYear]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_DateOther">[dateMain]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strOther">LASTYEAR</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THDiff">[dblThreshholdCountNum]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THDiffRev">[dblThreshholdRevNum]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THPct">[dblThreshholdCountPct]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_TH_PctRev">[dblThreshholdRevPct]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+                <If Condition="[iCnt = (intTotalStation*3)-1]" DisplayName="If next itration is for the last station?" sap:VirtualizedContainerService.HintSize="483.2,209.6" sap2010:WorkflowViewState.IdRef="If_2">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <If.Then>
+                    <Assign sap:VirtualizedContainerService.HintSize="262.4,60" sap2010:WorkflowViewState.IdRef="Assign_7">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:Boolean">[bLastStation]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:Boolean">True</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                  </If.Then>
+                </If>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Today" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="GetReport.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileLoc]</OutArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateMain]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strStation">[strTargetStation]</InArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="in_bNeedLogin">[bFirst]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strAllStations">[strWholeStations]</InArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="in_bLast">[bLastStation]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+                <c:Increase sap:VirtualizedContainerService.HintSize="483.2,22.4" sap2010:WorkflowViewState.IdRef="Increase_3" in_IntNum="[iCnt]" />
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Today" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="ExportData.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLoc]</InArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - Today" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="Alert.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">[dateMain]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
+                    <InArgument x:TypeArguments="s:DateTime" x:Key="in_DateOther">[dateLastYear]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strOther">TODAY</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THDiff">[dblThreshholdCountNum]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THDiffRev">[dblThreshholdRevNum]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_THPct">[dblThreshholdCountPct]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_TH_PctRev">[dblThreshholdRevPct]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:InvokeWorkflowFile>
+              </Sequence>
+            </ActivityAction>
+          </ui:ForEach.Body>
+        </ui:ForEach>
       </Sequence>
       <FlowStep.Next>
         <x:Reference>__ReferenceID1</x:Reference>

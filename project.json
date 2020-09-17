@@ -3,7 +3,7 @@
   "description": "Orchestration Process",
   "main": "Main.xaml",
   "dependencies": {
-    "CustomLibrary": "[1.0.25]",
+    "CustomLibrary": "[1.0.26]",
     "UiPath.Excel.Activities": "[2.8.6]",
     "UiPath.PDF.Activities": "[3.2.2]",
     "UiPath.Persistence.Activities": "[1.1.4]",
