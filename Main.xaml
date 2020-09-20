@@ -41,7 +41,7 @@
     </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
-    <scg:List x:TypeArguments="AssemblyReference" Capacity="22">
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="44">
       <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
@@ -64,6 +64,7 @@
       <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
       <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
       <AssemblyReference>CustomLibrary</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
   <Flowchart sap:VirtualizedContainerService.HintSize="633.6,636.8" sap2010:WorkflowViewState.IdRef="Flowchart_1">
@@ -77,6 +78,10 @@
       <Variable x:TypeArguments="x:String" Name="strFileLastyearLoc" />
       <Variable x:TypeArguments="s:String[]" Default="[{&quot;06&quot;, &quot;08&quot;, &quot;09&quot;, &quot;14&quot;, &quot;86&quot;, &quot;89&quot;, &quot;98&quot;}]" Name="arrStation" />
       <Variable x:TypeArguments="x:String" Name="strAllStations" />
+      <Variable x:TypeArguments="x:String" Name="strAllPDF" />
+      <Variable x:TypeArguments="x:String" Name="strAllXL" />
+      <Variable x:TypeArguments="x:String" Name="strAllAlert" />
+      <Variable x:TypeArguments="x:String" Name="strXL" />
     </Flowchart.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -97,24 +102,24 @@
           <av:PointCollection x:Key="ConnectorLocation">300,267.3 300,314.5</av:PointCollection>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <ui:CommentOut sap:VirtualizedContainerService.HintSize="200,52.8" sap2010:WorkflowViewState.IdRef="CommentOut_1">
-        <ui:CommentOut.Body>
-          <Sequence DisplayName="Ignored Activities" sap2010:WorkflowViewState.IdRef="Sequence_2">
-            <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="ExportData.xaml">
-              <ui:InvokeWorkflowFile.Arguments>
-                <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">N1_Traffic Count and Revenue.xlsx</InArgument>
-                <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
-                <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">localfile\</InArgument>
-              </ui:InvokeWorkflowFile.Arguments>
-              <sap:WorkflowViewStateService.ViewState>
-                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                </scg:Dictionary>
-              </sap:WorkflowViewStateService.ViewState>
-            </ui:InvokeWorkflowFile>
-          </Sequence>
-        </ui:CommentOut.Body>
-      </ui:CommentOut>
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Wrap Up " sap:VirtualizedContainerService.HintSize="333.6,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="WrapUp.xaml">
+        <ui:InvokeWorkflowFile.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="in_XLfile">
+            <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="strAllXL" />
+          </InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_PDFfile">
+            <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="strAllPDF" />
+          </InArgument>
+          <InArgument x:TypeArguments="s:DateTime" x:Key="in_Date">
+            <mva:VisualBasicValue x:TypeArguments="s:DateTime" ExpressionText="dateMain" />
+          </InArgument>
+        </ui:InvokeWorkflowFile.Arguments>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </ui:InvokeWorkflowFile>
       <FlowStep.Next>
         <FlowStep x:Name="__ReferenceID0">
           <sap:WorkflowViewStateService.ViewState>
@@ -156,7 +161,7 @@
           <av:PointCollection x:Key="ConnectorLocation">300,168.38 300,214.5</av:PointCollection>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <Sequence DisplayName="Get Report Files" sap:VirtualizedContainerService.HintSize="601.6,3260.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
+      <Sequence DisplayName="Process'em" sap:VirtualizedContainerService.HintSize="200,68.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
         <Sequence.Variables>
           <Variable x:TypeArguments="x:String" Default="localfile\" Name="strDirLoc" />
           <Variable x:TypeArguments="x:String" Name="strTargetStation" />
@@ -177,14 +182,14 @@
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
-        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke Workflow File" sap:VirtualizedContainerService.HintSize="560,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_13" UnSafe="False" WorkflowFileName="Data\InitSettings.xaml">
+        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke Workflow File" sap:VirtualizedContainerService.HintSize="560.8,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_13" UnSafe="False" WorkflowFileName="Data\InitSettings.xaml">
           <ui:InvokeWorkflowFile.Arguments>
             <InArgument x:TypeArguments="x:String" x:Key="in_ConfigFile">Data\Config.xlsx</InArgument>
             <InArgument x:TypeArguments="s:String[]" x:Key="in_ConfigSheets">[{"Settings","Constants"}]</InArgument>
             <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="out_Config">[Config]</OutArgument>
           </ui:InvokeWorkflowFile.Arguments>
         </ui:InvokeWorkflowFile>
-        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="560,317.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_2">
+        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="560.8,317.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_2">
           <ui:MultipleAssign.AssignOperations>
             <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
               <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_9">
@@ -254,20 +259,36 @@
             </scg:List>
           </ui:MultipleAssign.AssignOperations>
         </ui:MultipleAssign>
-        <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="560,52.8" sap2010:WorkflowViewState.IdRef="CommentOut_3">
+        <Assign sap:VirtualizedContainerService.HintSize="560.8,60" sap2010:WorkflowViewState.IdRef="Assign_1">
+          <Assign.To>
+            <OutArgument x:TypeArguments="s:DateTime">[dateMain]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="s:DateTime">[DateTime.Now.AddDays(-1)]</InArgument>
+          </Assign.Value>
+        </Assign>
+        <Assign sap:VirtualizedContainerService.HintSize="560.8,60" sap2010:WorkflowViewState.IdRef="Assign_3">
+          <Assign.To>
+            <OutArgument x:TypeArguments="s:DateTime">[dateMain]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="s:DateTime">[new DateTime(2020,09,16)]</InArgument>
+          </Assign.Value>
+        </Assign>
+        <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="560.8,52.8" sap2010:WorkflowViewState.IdRef="CommentOut_4">
           <ui:CommentOut.Body>
-            <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="304,152.8" sap2010:WorkflowViewState.IdRef="Sequence_4">
+            <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="304,152.8" sap2010:WorkflowViewState.IdRef="Sequence_6">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <Assign sap:VirtualizedContainerService.HintSize="262.4,60" sap2010:WorkflowViewState.IdRef="Assign_3">
+              <Assign DisplayName="Assign for late night; no report yet" sap:VirtualizedContainerService.HintSize="262.4,60" sap2010:WorkflowViewState.IdRef="Assign_6">
                 <Assign.To>
                   <OutArgument x:TypeArguments="s:DateTime">[dateMain]</OutArgument>
                 </Assign.To>
                 <Assign.Value>
-                  <InArgument x:TypeArguments="s:DateTime">[new DateTime(2020,09,14)]</InArgument>
+                  <InArgument x:TypeArguments="s:DateTime">[DateTime.Now.AddDays(-2)]</InArgument>
                 </Assign.Value>
               </Assign>
             </Sequence>
@@ -279,23 +300,7 @@
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
         </ui:CommentOut>
-        <Assign sap:VirtualizedContainerService.HintSize="560,60" sap2010:WorkflowViewState.IdRef="Assign_1">
-          <Assign.To>
-            <OutArgument x:TypeArguments="s:DateTime">[dateMain]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="s:DateTime">[DateTime.Now.AddDays(-1)]</InArgument>
-          </Assign.Value>
-        </Assign>
-        <Assign DisplayName="Assign for late night; no report yet" sap:VirtualizedContainerService.HintSize="560,60" sap2010:WorkflowViewState.IdRef="Assign_6">
-          <Assign.To>
-            <OutArgument x:TypeArguments="s:DateTime">[dateMain]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="s:DateTime">[DateTime.Now.AddDays(-2)]</InArgument>
-          </Assign.Value>
-        </Assign>
-        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="560,161.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="560.8,161.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
           <ui:MultipleAssign.AssignOperations>
             <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
               <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
@@ -331,20 +336,20 @@
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
         </ui:MultipleAssign>
-        <c:GetLastYearDay sap:VirtualizedContainerService.HintSize="560,22.4" sap2010:WorkflowViewState.IdRef="GetLastYearDay_1" inThisYearDate="[dateMain]" outLastYearDate="[dateLastYear]" />
-        <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each Station" sap:VirtualizedContainerService.HintSize="560,2125.6" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[arrStation]">
+        <c:GetLastYearDay sap:VirtualizedContainerService.HintSize="560.8,22.4" sap2010:WorkflowViewState.IdRef="GetLastYearDay_1" inThisYearDate="[dateMain]" outLastYearDate="[dateLastYear]" />
+        <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each Station" sap:VirtualizedContainerService.HintSize="560.8,2648.8" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[arrStation]">
           <ui:ForEach.Body>
             <ActivityAction x:TypeArguments="x:String">
               <ActivityAction.Argument>
                 <DelegateInArgument x:TypeArguments="x:String" Name="item" />
               </ActivityAction.Argument>
-              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="524.8,1991.2" sap2010:WorkflowViewState.IdRef="Sequence_5">
+              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="525.6,2514.4" sap2010:WorkflowViewState.IdRef="Sequence_5">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <Assign sap:VirtualizedContainerService.HintSize="483.2,60" sap2010:WorkflowViewState.IdRef="Assign_5">
+                <Assign sap:VirtualizedContainerService.HintSize="484,60" sap2010:WorkflowViewState.IdRef="Assign_5">
                   <Assign.To>
                     <OutArgument x:TypeArguments="x:String">[strTargetStation]</OutArgument>
                   </Assign.To>
@@ -352,7 +357,7 @@
                     <InArgument x:TypeArguments="x:String">[item]</InArgument>
                   </Assign.Value>
                 </Assign>
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Yesterday" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="GetReport.xaml">
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Yesterday" sap:VirtualizedContainerService.HintSize="484,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="GetReport.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileYesterdayLoc]</OutArgument>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
@@ -368,26 +373,15 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
-                <If Condition="[iCnt = 0]" DisplayName="If only first time; for login" sap:VirtualizedContainerService.HintSize="483.2,209.6" sap2010:WorkflowViewState.IdRef="If_1">
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                  <If.Then>
-                    <Assign sap:VirtualizedContainerService.HintSize="262.4,60" sap2010:WorkflowViewState.IdRef="Assign_4">
-                      <Assign.To>
-                        <OutArgument x:TypeArguments="x:Boolean">[bFirst]</OutArgument>
-                      </Assign.To>
-                      <Assign.Value>
-                        <InArgument x:TypeArguments="x:Boolean">False</InArgument>
-                      </Assign.Value>
-                    </Assign>
-                  </If.Then>
-                </If>
-                <c:Increase sap:VirtualizedContainerService.HintSize="483.2,22.4" sap2010:WorkflowViewState.IdRef="Increase_1" in_IntNum="[iCnt]" />
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Yesterday" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="ExportData.xaml">
+                <Assign sap:VirtualizedContainerService.HintSize="484,60" sap2010:WorkflowViewState.IdRef="Assign_8">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[strAllPDF]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[strAllPDF+strFileYesterdayLoc+","]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Yesterday" sap:VirtualizedContainerService.HintSize="484,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="ExportData.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileYesterdayLoc]</InArgument>
                     <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
@@ -399,7 +393,7 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - Yesterday" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="Alert.xaml">
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - Yesterday" sap:VirtualizedContainerService.HintSize="484,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="Alert.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileYesterdayLoc]</InArgument>
@@ -411,6 +405,8 @@
                     <InArgument x:TypeArguments="x:Double" x:Key="in_THDiffRev">[dblThreshholdRevNum]</InArgument>
                     <InArgument x:TypeArguments="x:Double" x:Key="in_THPct">[dblThreshholdCountPct]</InArgument>
                     <InArgument x:TypeArguments="x:Double" x:Key="in_TH_PctRev">[dblThreshholdRevPct]</InArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_XLfile">[strXL]</OutArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="bFirst">[bFirst]</InArgument>
                   </ui:InvokeWorkflowFile.Arguments>
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -418,7 +414,26 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Last Year" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="GetReport.xaml">
+                <c:Increase sap:VirtualizedContainerService.HintSize="484,22.4" sap2010:WorkflowViewState.IdRef="Increase_1" in_IntNum="[iCnt]" />
+                <If Condition="[iCnt = 1]" DisplayName="If only first time; for login" sap:VirtualizedContainerService.HintSize="484,208" sap2010:WorkflowViewState.IdRef="If_1">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <If.Then>
+                    <Assign sap:VirtualizedContainerService.HintSize="262,60" sap2010:WorkflowViewState.IdRef="Assign_4">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:Boolean">[bFirst]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:Boolean">False</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                  </If.Then>
+                </If>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Last Year" sap:VirtualizedContainerService.HintSize="484,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="GetReport.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileLastyearLoc]</OutArgument>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
@@ -434,8 +449,16 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
-                <c:Increase sap:VirtualizedContainerService.HintSize="483.2,22.4" sap2010:WorkflowViewState.IdRef="Increase_2" in_IntNum="[iCnt]" />
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Last Year" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_11" UnSafe="False" WorkflowFileName="ExportData.xaml">
+                <Assign sap:VirtualizedContainerService.HintSize="484,60" sap2010:WorkflowViewState.IdRef="Assign_10">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[strAllPDF]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[strAllPDF+strFileLastyearLoc+","]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <c:Increase sap:VirtualizedContainerService.HintSize="484,22" sap2010:WorkflowViewState.IdRef="Increase_2" in_IntNum="[iCnt]" />
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Last Year" sap:VirtualizedContainerService.HintSize="484,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_11" UnSafe="False" WorkflowFileName="ExportData.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLastyearLoc]</InArgument>
                     <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
@@ -447,7 +470,7 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - LastYear" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_12" UnSafe="False" WorkflowFileName="Alert.xaml">
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - LastYear" sap:VirtualizedContainerService.HintSize="484,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_12" UnSafe="False" WorkflowFileName="Alert.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLastyearLoc]</InArgument>
@@ -459,6 +482,8 @@
                     <InArgument x:TypeArguments="x:Double" x:Key="in_THDiffRev">[dblThreshholdRevNum]</InArgument>
                     <InArgument x:TypeArguments="x:Double" x:Key="in_THPct">[dblThreshholdCountPct]</InArgument>
                     <InArgument x:TypeArguments="x:Double" x:Key="in_TH_PctRev">[dblThreshholdRevPct]</InArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_XLfile">[strXL]</OutArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="bFirst">[bFirst]</InArgument>
                   </ui:InvokeWorkflowFile.Arguments>
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -466,7 +491,7 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
-                <If Condition="[iCnt = (intTotalStation*3)-1]" DisplayName="If next itration is for the last station?" sap:VirtualizedContainerService.HintSize="483.2,209.6" sap2010:WorkflowViewState.IdRef="If_2">
+                <If Condition="[iCnt = (intTotalStation*3)-1]" DisplayName="If next itration is for the last station?" sap:VirtualizedContainerService.HintSize="484,208" sap2010:WorkflowViewState.IdRef="If_2">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -474,7 +499,7 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                   <If.Then>
-                    <Assign sap:VirtualizedContainerService.HintSize="262.4,60" sap2010:WorkflowViewState.IdRef="Assign_7">
+                    <Assign sap:VirtualizedContainerService.HintSize="262,60" sap2010:WorkflowViewState.IdRef="Assign_7">
                       <Assign.To>
                         <OutArgument x:TypeArguments="x:Boolean">[bLastStation]</OutArgument>
                       </Assign.To>
@@ -484,7 +509,7 @@
                     </Assign>
                   </If.Then>
                 </If>
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Today" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="GetReport.xaml">
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Get Report File - Today" sap:VirtualizedContainerService.HintSize="484,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="GetReport.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strFileLoc]</OutArgument>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strDirLoc">[strDirLoc]</InArgument>
@@ -500,8 +525,16 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
-                <c:Increase sap:VirtualizedContainerService.HintSize="483.2,22.4" sap2010:WorkflowViewState.IdRef="Increase_3" in_IntNum="[iCnt]" />
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Today" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="ExportData.xaml">
+                <Assign sap:VirtualizedContainerService.HintSize="484,60" sap2010:WorkflowViewState.IdRef="Assign_11">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[strAllPDF]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[strAllPDF+strFileLoc+","]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <c:Increase sap:VirtualizedContainerService.HintSize="484,22" sap2010:WorkflowViewState.IdRef="Increase_3" in_IntNum="[iCnt]" />
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Data Export to XL Today" sap:VirtualizedContainerService.HintSize="484,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="ExportData.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLoc]</InArgument>
                     <OutArgument x:TypeArguments="x:String" x:Key="out_strFileLoc">[strXLLoc]</OutArgument>
@@ -513,7 +546,7 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
-                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - Today" sap:VirtualizedContainerService.HintSize="483.2,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="Alert.xaml">
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Gen XL - Today" sap:VirtualizedContainerService.HintSize="484,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="Alert.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strXLLoc">[strXLLoc]</InArgument>
                     <InArgument x:TypeArguments="x:String" x:Key="in_strFileLoc">[strFileLoc]</InArgument>
@@ -525,6 +558,8 @@
                     <InArgument x:TypeArguments="x:Double" x:Key="in_THDiffRev">[dblThreshholdRevNum]</InArgument>
                     <InArgument x:TypeArguments="x:Double" x:Key="in_THPct">[dblThreshholdCountPct]</InArgument>
                     <InArgument x:TypeArguments="x:Double" x:Key="in_TH_PctRev">[dblThreshholdRevPct]</InArgument>
+                    <OutArgument x:TypeArguments="x:String" x:Key="out_XLfile">[strXL]</OutArgument>
+                    <InArgument x:TypeArguments="x:Boolean" x:Key="bFirst">[bFirst]</InArgument>
                   </ui:InvokeWorkflowFile.Arguments>
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -532,9 +567,24 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeWorkflowFile>
+                <Assign sap:VirtualizedContainerService.HintSize="484,60" sap2010:WorkflowViewState.IdRef="Assign_12">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[strAllXL]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[strAllXL + strXL + ","]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="484,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Trace" Message="[&quot;&gt;&gt;&gt;&gt;strAllXL:&quot; + &quot;,&quot; +strAllXL +&quot;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&quot;+strXL]" />
               </Sequence>
             </ActivityAction>
           </ui:ForEach.Body>
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
         </ui:ForEach>
       </Sequence>
       <FlowStep.Next>
