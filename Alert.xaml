@@ -16,7 +16,7 @@
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1249,8920</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1142,9380</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Alert_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <scg:List x:TypeArguments="x:String" Capacity="30">
@@ -80,7 +80,7 @@
       <AssemblyReference>CustomLibrary</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Alert" sap:VirtualizedContainerService.HintSize="1152,8755" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Alert" sap:VirtualizedContainerService.HintSize="1152,9215" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:Int32" Default="1" Name="i" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtIn" />
@@ -181,18 +181,18 @@
         </scg:List>
       </ui:MultipleAssign.AssignOperations>
     </ui:MultipleAssign>
-    <Switch x:TypeArguments="x:String" DisplayName="Switch" Expression="[in_strOther]" sap:VirtualizedContainerService.HintSize="1110,160" sap2010:WorkflowViewState.IdRef="Switch`1_1">
+    <Switch x:TypeArguments="x:String" DisplayName="Switch" Expression="[in_strOther]" sap:VirtualizedContainerService.HintSize="1110,620" sap2010:WorkflowViewState.IdRef="Switch`1_1">
       <Switch.Default>
         <c:FindCol sap:VirtualizedContainerService.HintSize="200,22.4" sap2010:WorkflowViewState.IdRef="FindCol_7" in_Date="[in_Date]" out_Col="[strCol]" />
       </Switch.Default>
-      <Sequence x:Key="LASTYEAR" sap:VirtualizedContainerService.HintSize="380,415" sap2010:WorkflowViewState.IdRef="Sequence_12">
+      <Sequence x:Key="LASTYEAR" sap:VirtualizedContainerService.HintSize="380,414" sap2010:WorkflowViewState.IdRef="Sequence_12">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
         <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="338,91" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Trace" Message="[&quot;&gt;Alert: LAST Year&quot;]" />
-        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="338,130" sap2010:WorkflowViewState.IdRef="MultipleAssign_6">
+        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="338,129" sap2010:WorkflowViewState.IdRef="MultipleAssign_6">
           <ui:MultipleAssign.AssignOperations>
             <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
               <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_15">
@@ -216,14 +216,14 @@
         </ui:MultipleAssign>
         <c:FindCol sap:VirtualizedContainerService.HintSize="338,22" sap2010:WorkflowViewState.IdRef="FindCol_4" in_Date="[in_DateOther]" out_Col="[strCol]" />
       </Sequence>
-      <Sequence x:Key="TODAY" sap:VirtualizedContainerService.HintSize="553,1172" sap2010:WorkflowViewState.IdRef="Sequence_13">
+      <Sequence x:Key="TODAY" sap:VirtualizedContainerService.HintSize="553,1169" sap2010:WorkflowViewState.IdRef="Sequence_13">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
         <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="511,91" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Trace" Message="[&quot;&gt;Alert: TODAY&quot;]" />
-        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="511,130" sap2010:WorkflowViewState.IdRef="MultipleAssign_7">
+        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="511,129" sap2010:WorkflowViewState.IdRef="MultipleAssign_7">
           <ui:MultipleAssign.AssignOperations>
             <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
               <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_16">
@@ -245,11 +245,11 @@
             </scg:List>
           </ui:MultipleAssign.AssignOperations>
         </ui:MultipleAssign>
-        <c:FindCol DisplayName="FindCol Yesterday" sap:VirtualizedContainerService.HintSize="511,22" sap2010:WorkflowViewState.IdRef="FindCol_5" in_Date="[in_Date.AddDays(-1)]" out_Col="[strColYesterday]" />
+        <c:FindCol DisplayName="FindCol Yesterday" sap:VirtualizedContainerService.HintSize="511,22" sap2010:WorkflowViewState.IdRef="FindCol_5" in_Date="[in_Date.AddDays(-7)]" out_Col="[strColYesterday]" />
         <c:FindCol DisplayName="FindCol Today" sap:VirtualizedContainerService.HintSize="511,22" sap2010:WorkflowViewState.IdRef="FindCol_6" in_Date="[in_Date]" out_Col="[strCol]" />
-        <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="511,53" sap2010:WorkflowViewState.IdRef="CommentOut_2">
+        <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="511,51" sap2010:WorkflowViewState.IdRef="CommentOut_2">
           <ui:CommentOut.Body>
-            <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="476,354" sap2010:WorkflowViewState.IdRef="Sequence_24">
+            <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="476,352" sap2010:WorkflowViewState.IdRef="Sequence_24">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
